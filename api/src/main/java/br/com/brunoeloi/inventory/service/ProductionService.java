@@ -1,25 +1,24 @@
 package br.com.brunoeloi.inventory.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.HashMap;
 import br.com.brunoeloi.inventory.model.Product;
+import br.com.brunoeloi.inventory.model.ProductMaterial;
 import br.com.brunoeloi.inventory.model.RawMaterial;
 import jakarta.enterprise.context.ApplicationScoped;
-import br.com.brunoeloi.inventory.model.ProductMaterial;
-
 
 @ApplicationScoped
 public class ProductionService {
     
     public ProductionResult calculateProduction() {
         List<Product> products = Product.listAll();
+        
         products.sort((p1, p2) -> Double.compare(p2.value, p1.value));
 
         List<RawMaterial> materials = RawMaterial.listAll();
-
         Map<Long, Integer> stockMap = new HashMap<>();
         for (RawMaterial rm : materials) {
             stockMap.put(rm.id, rm.stockQuantity);
@@ -29,12 +28,22 @@ public class ProductionService {
         double totalValue = 0;
 
         for (Product product : products) {
+            if (product.composition == null || product.composition.isEmpty()) {
+                continue;
+            }
+
             int quantityToProduce = 0;
             boolean canProduce = true;
 
             while (canProduce) {
                 for (ProductMaterial pm : product.composition) {
+                    if (pm.rawMaterial == null) {
+                        canProduce = false;
+                        break;
+                    }
+
                     int currentStock = stockMap.getOrDefault(pm.rawMaterial.id, 0);
+                    
                     if (currentStock < pm.quantityRequired) {
                         canProduce = false;
                         break;
@@ -43,6 +52,7 @@ public class ProductionService {
 
                 if (canProduce) {
                     quantityToProduce++;
+
                     for (ProductMaterial pm : product.composition) {
                         int currentStock = stockMap.get(pm.rawMaterial.id);
                         stockMap.put(pm.rawMaterial.id, currentStock - (int) pm.quantityRequired);
@@ -58,9 +68,7 @@ public class ProductionService {
         }
 
         return new ProductionResult(suggestion, totalValue);
-
     }
-
     public static class ProductionResult {
         public List<ProductionItem> items;
         public double totalValue;
@@ -83,6 +91,5 @@ public class ProductionService {
             this.unitValue = unitValue;
             this.subtotal = subtotal;
         }
-
     }
 }

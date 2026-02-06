@@ -21,7 +21,7 @@ public class ProductResource {
 
     @GET
     public List<Product> list() {
-        return Product.listAll();
+        return Product.list("SELECT p FROM Product p LEFT JOIN FETCH p.composition c LEFT JOIN FETCH c.rawMaterial");
     }
     
     @POST
