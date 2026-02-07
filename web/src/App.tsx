@@ -1,22 +1,29 @@
+import { Toaster } from "../src/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RawMaterials } from "./pages/RawMaterials";
-import { Products } from "./pages/Products";
-import { Navbar } from "./components/Navbar";
-import { Planning } from "./pages/Planning";
+import Dashboard from "./pages/Dashboard";
+import Products from "./pages/Products";
+import RawMaterials from "./pages/RawMaterials";
+import ProductionSimulator from "./pages/ProductionSimulator";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  return (
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <Toaster />
+    <Sonner />
     <BrowserRouter>
-      <div className="min-h-screen bg-slate-100 pb-20">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<RawMaterials />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/planning" element={<Planning />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/raw-materials" element={<RawMaterials />} />
+        <Route path="/production" element={<ProductionSimulator />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
-  );
-}
+  </QueryClientProvider>
+);
 
 export default App;

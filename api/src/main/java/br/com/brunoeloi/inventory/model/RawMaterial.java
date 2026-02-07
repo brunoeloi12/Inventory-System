@@ -9,5 +9,6 @@ public class RawMaterial extends PanacheEntity {
     public String name;
     public String code;
     public int stockQuantity;
+    public boolean active = true;
     
 }
