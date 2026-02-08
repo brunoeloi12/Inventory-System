@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import * as productHooks from "@/hooks/useProducts";
 import * as materialHooks from "@/hooks/useRawMaterials";
 
-// Mocks
 vi.mock("@/hooks/useProducts", () => ({ useProducts: vi.fn() }));
 vi.mock("@/hooks/useRawMaterials", () => ({ useRawMaterials: vi.fn() }));
 vi.mock("@/components/layout/MainLayout", () => ({

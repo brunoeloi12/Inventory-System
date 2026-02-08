@@ -8,11 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductionSimulator from "./ProductionSimulator";
 import productsReducer from "@/store/slices/productsSlice";
 import materialsReducer from "@/store/slices/materialsSlice";
-
-// 1. IMPORTAR E MOCKAR O HOOK
 import * as hooks from "@/hooks/useProducts";
 
-// Mocka o módulo inteiro, mas permite sobrescrever o hook específico
 vi.mock("@/hooks/useProducts", async (importOriginal) => {
   const actual = await importOriginal<any>();
   return {
@@ -45,7 +42,6 @@ const renderWithRedux = (component: React.ReactElement) => {
 
 describe("ProductionSimulator", () => {
   it("Deve calcular a quantidade máxima baseada no estoque e priorizar valor", () => {
-    // 2. DEFINIR O RETORNO DO HOOK
     vi.mocked(hooks.useProductsWithMaterials).mockReturnValue({
       isLoading: false,
       data: [
@@ -61,7 +57,7 @@ describe("ProductionSimulator", () => {
               raw_materials: {
                 id: "1",
                 name: "Ouro",
-                stock_quantity: 10, // Permite fazer 5
+                stock_quantity: 10,
                 active: true,
               },
             },
@@ -74,7 +70,6 @@ describe("ProductionSimulator", () => {
 
     expect(screen.getByText("Produto Caro")).toBeInTheDocument();
 
-    // CORREÇÃO AQUI: Usamos getAllByText e esperamos 2 ocorrências (Card + Tabela)
     const elements = screen.getAllByText("5");
     expect(elements.length).toBeGreaterThanOrEqual(1);
   });

@@ -46,7 +46,6 @@ vi.mock("@/components/layout/MainLayout", () => ({
 
 describe("Página de Insumos", () => {
   it("Deve exibir a lista de materiais corretamente", () => {
-    // Mockar o retorno do React Query
     vi.mocked(hooks.useRawMaterials).mockReturnValue({
       data: [
         { id: "1", name: "Farinha Teste", code: "FAR-99", stockQuantity: 50 },

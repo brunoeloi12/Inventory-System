@@ -4,12 +4,10 @@ import { describe, it, expect, vi } from "vitest";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // <--- Importar
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Products from "./Products";
 import productsReducer from "@/store/slices/productsSlice";
 import materialsReducer from "@/store/slices/materialsSlice";
-
-// Importar e Mockar o hook
 import * as hooks from "@/hooks/useProducts";
 import * as matHooks from "@/hooks/useRawMaterials";
 
@@ -48,7 +46,6 @@ vi.mock("@/components/layout/MainLayout", () => ({
 
 describe("Página de Produtos", () => {
   it("Deve identificar visualmente produtos com produção comprometida", () => {
-    // Mockar dados do React Query
     vi.mocked(hooks.useProductsWithMaterials).mockReturnValue({
       data: [
         {
